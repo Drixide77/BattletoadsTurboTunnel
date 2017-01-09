@@ -9,6 +9,9 @@
 #include "ModulePlayer.h"
 #include "ModuleAudio.h"
 
+#define VERTICAL_COUNTER 4
+#define HOVER_COUNTER 3
+
 ModulePlayer::ModulePlayer(bool active) : Module(active)
 {
 	// flying animation
@@ -41,6 +44,11 @@ bool ModulePlayer::Start()
 	hoverSpeed = 1;
 	hoverCounter = 0;
 
+	jumping = false;
+	ramp_jumping = false;
+	verticalSpeed = 0;
+	verticalCounter = 0;
+
 	SDL_Rect collRec;
 	collRec.x = 1;
 	collRec.y = 1;
@@ -68,30 +76,38 @@ bool ModulePlayer::CleanUp()
 update_status ModulePlayer::Update()
 {
 	int speed = 1;
+	int camera = App->renderer->camera.x / 3;
 
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-	{
-		position.x -= speed;
+	if (!jumping && !ramp_jumping) {
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			if (position.x + camera > 5) position.x -= speed;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			if (position.x + camera < 200) position.x += speed;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		{
+			if (position.y < 150) position.y += speed * 2;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		{
+			if (position.y > 110) position.y -= speed * 2;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+		{
+			verticalSpeed = -4;
+			jumping = true;
+		}
 	}
-
-	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	{
-		position.x += speed;
-	}
-
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		if (position.y < 150) position.y += speed;
-	}
-
-	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	{
-		if (position.y > 110) position.y -= speed;
-	}
-
-	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-	{
-		// JUMP	
+	else {
+		position.y += verticalSpeed;
+		verticalSpeed += 1;
 	}
 
 	collider->SetPos(position.x, position.y); //update collider position
@@ -101,7 +117,7 @@ update_status ModulePlayer::Update()
 		hoverCounter = 0;
 	}
 	else hoverCounter++;
-	if (hoverSpeed > 0 && hoverHeight >= 10) {
+	if (hoverSpeed > 0 && hoverHeight >= 8) {
 		hoverSpeed = -1;
 	}
 	if (hoverSpeed < 0 && hoverHeight <= 0) {
