@@ -28,6 +28,7 @@ public:
 	Animation idle;
 	Animation jump;
 	Animation falling;
+	Animation dead;
 	iPoint position;
 	float xF, yF;
 	int height;

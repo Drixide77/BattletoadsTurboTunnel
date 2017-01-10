@@ -15,16 +15,13 @@
 
 ModulePlayer::ModulePlayer(bool active) : Module(active)
 {
-	// flying animation
 	idle.frames.push_back({16, 442, 37, 30}); //16, 442, 53, 472
 
-	/*
-	// move upwards
-	up.frames.push_back({100, 1, 32, 14});
-	up.frames.push_back({132, 0, 32, 14});
-	up.loop = false;
-	up.speed = 0.1f;
-	*/
+	jump.frames.push_back({63, 440, 37, 30});
+
+	falling.frames.push_back({105, 439, 46, 31});
+
+	dead.frames.push_back({193, 443, 26, 34});
 }
 
 ModulePlayer::~ModulePlayer()
@@ -78,58 +75,70 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	float hSpeed = 2.0;
-	float vSpeed = 3.5;
-	int camera = App->renderer->camera.x / 3;
+	if (!destroyed) {
+		float hSpeed = 2.0;
+		float vSpeed = 3.5;
+		int camera = App->renderer->camera.x / 3;
 
-	if (!jumping) {
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		{
-			if (position.y < 150) yF += vSpeed;
+		if (!jumping) {
+			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+			{
+				if (position.y < 150) yF += vSpeed;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+			{
+				if (position.y > 110) yF -= vSpeed;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+			{
+				verticalSpeed = -JUMP_SPEED;
+				jumping = true;
+				current_animation = &jump;
+			}
+
+			if (verticalOffset < 4.0f) verticalSpeed += GRAVITY;
+			else verticalSpeed -= GRAVITY;
+
+			verticalOffset += verticalSpeed;
 		}
-
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		{
-			if (position.y > 110) yF -= vSpeed;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		{
-			verticalSpeed = -JUMP_SPEED;
-			jumping = true;
-		}
-
-		if (verticalOffset < 4.0f) verticalSpeed += GRAVITY;
-		else verticalSpeed -= GRAVITY;
-
-		verticalOffset += verticalSpeed;
-	}
-	else {
-		if (ramp_jumping) {
-			if (position.x < 2400 + 11248) {
-				verticalSpeed += GRAVITY*0.5f;
-			} else if (position.x < 2400 + 11248) {
-				verticalSpeed += GRAVITY*0.5f;
+		else {
+			if (ramp_jumping) {
+				if (position.x < 2400 + 11248) {
+					verticalSpeed += GRAVITY*0.5f;
+				}
+				else if (position.x < 2400 + 11248) {
+					verticalSpeed += GRAVITY*0.5f;
+				}
+			}
+			else verticalSpeed += GRAVITY;
+			if (verticalSpeed > -0.5f) current_animation = &falling;
+			verticalOffset += verticalSpeed;
+			if (verticalOffset > 4.0f) {
+				verticalOffset = 4.0f;
+				verticalSpeed = -INITIAL_SPEED;
+				jumping = false;
+				ramp_jumping = false;
+				current_animation = &idle;
 			}
 		}
-		else verticalSpeed += GRAVITY;
-		verticalOffset += verticalSpeed;
-		if (verticalOffset > 4.0f) {
-			verticalOffset = 4.0f;
-			verticalSpeed = -INITIAL_SPEED;
-			jumping = false;
-			ramp_jumping = false;
+
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			if (position.x + camera > 5) xF -= hSpeed;
 		}
-	}
 
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-	{
-		if (position.x + camera > 5) xF -= hSpeed;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			if (position.x + camera < 200) xF += hSpeed;
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	{
-		if (position.x + camera < 200) xF += hSpeed;
+	}
+	else {
+		//Death animation and clean at the end
+		//CleanUp();
+		//App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
 	}
 
 	height = (int)verticalOffset;
@@ -155,9 +164,8 @@ update_status ModulePlayer::Update()
 
 void ModulePlayer::onNotify(GameEvent event) {
 	if (event == CRASH) {
-		//App->particles->AddParticle(App->particles->explosion, position.x+5, position.y); //create explosion
-		CleanUp();
-		App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
+		destroyed = true;
+		current_animation = &dead;
 	}
 	else if (event == RAMP_JUMP) {
 		if (!jumping && position.y < 140 && position.y > 120) {
@@ -168,24 +176,25 @@ void ModulePlayer::onNotify(GameEvent event) {
 			}
 			jumping = true;
 			ramp_jumping = true;
+			current_animation = &jump;
 		}
 	}
 	else if (event == CHECK_LOW) {
 		if (!jumping || height > 0) {
-			CleanUp();
-			App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
+			destroyed = true;
+			current_animation = &dead;
 		}
 	}
 	else if (event == CHECK_HIGH) {
 		if (height > 25) {
-			CleanUp();
-			App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
+			destroyed = true;
+			current_animation = &dead;
 		}
 	}
 	else if (event == CHECK_PIT) {
 		if (!jumping) {
-			CleanUp();
-			App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
+			destroyed = true;
+			current_animation = &dead;
 		}
 	}
 }
