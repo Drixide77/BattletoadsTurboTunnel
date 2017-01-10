@@ -22,6 +22,9 @@ public:
 	SDL_Texture* background = nullptr;
 	SDL_Texture* background2 = nullptr;
 	SDL_Texture* stars = nullptr;
+
+private:
+	void initCol();
 };
 
 #endif // __MODULESCENESPACE_H__

@@ -62,7 +62,7 @@ update_status ModuleCollision::Update()
 void ModuleCollision::DebugDraw()
 {
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); ++it)
-		App->renderer->DrawQuad((*it)->rect, 255, 0, 0, 80);
+		App->renderer->DrawQuad((*it)->rect, 255, 255, 0, 80);
 }
 
 // Called before quitting
@@ -131,11 +131,25 @@ bool Collider::CheckCollision(const SDL_Rect& r) const
 void Collider::ValidCollision(Collider * collider) {
 	
  	if (CollisionMatrix[colliderType][collider->colliderType]) {
-		if(colliderType!=WALL)
+		if (collider->colliderType == TOP_WALL) {
+			if (rect.y < 132) observers_[0]->onNotify(CRASH);
+		} else if (collider->colliderType == BOT_WALL) {
+			if (rect.y > 128) observers_[0]->onNotify(CRASH);
+		} else if (collider->colliderType == LOW_WALL) {
+			observers_[0]->onNotify(CHECK_LOW);
+		} else if (collider->colliderType == HI_WALL) {
+			observers_[0]->onNotify(CHECK_HIGH);
+		} else if (collider->colliderType == RAMP) {
+			observers_[0]->onNotify(RAMP_JUMP);
+		} else if (collider->colliderType == PIT) {
+			observers_[0]->onNotify(CHECK_PIT);
+		}
+
+		/*if(colliderType!=WALL)
 			to_delete = true;
 		for (int i = 0; i < numObservers_; i++) {
 			observers_[0]->onNotify(DESTROY_PARTICLE);
-		}
+		}*/
 	}
 }
 

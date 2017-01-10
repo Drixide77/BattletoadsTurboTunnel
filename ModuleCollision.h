@@ -10,10 +10,12 @@
 
 enum ColliderType {
 	PLAYER,
-	PLAYER_LASER,
-	ENEMY_LASER,
-	WALL,
-	ENEMY,
+	TOP_WALL,
+	BOT_WALL,
+	LOW_WALL,
+	HI_WALL,
+	RAMP,
+	PIT
 };
 
 
@@ -35,11 +37,13 @@ public:
 	void ValidCollision(Collider * collider);
 	void addObserver(Observer* observer);
 	void removeObserver(Observer* observer);
-	bool CollisionMatrix[5][5] = { { false,false,true,true,true },
-									{ false,false,false,true,true },
-									{ true,false,false,true,false },
-									{ true,true,true,false,false },
-									{ true,true,false,true,false } };
+	bool CollisionMatrix[7][7] = { { false,true,true,true,true,true,true },
+									{ false,false,false,false,false,false,false },
+									{ false,false,false,false,false,false,false },
+									{ false,false,false,false,false,false,false },
+									{ false,false,false,false,false,false,false },
+									{ false,false,false,false,false,false,false },
+									{ false,false,false,false,false,false,false } };
 
 	Collider(SDL_Rect rectangle) : // expand this call if you need to
 		rect(rectangle)

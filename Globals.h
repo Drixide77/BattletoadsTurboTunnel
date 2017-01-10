@@ -19,7 +19,7 @@ enum update_status
 };
 
 
-enum GameEvent { CRASH, RAMP_JUMP };
+enum GameEvent { CRASH, RAMP_JUMP, CHECK_LOW, CHECK_HIGH, CHECK_PIT };
 
 
 // Useful typedefs ---------

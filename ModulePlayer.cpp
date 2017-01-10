@@ -10,7 +10,7 @@
 #include "ModuleAudio.h"
 
 #define GRAVITY 0.2f
-#define JUMP_SPEED 5.0f
+#define JUMP_SPEED 4.0f
 #define INITIAL_SPEED -1.0f
 
 ModulePlayer::ModulePlayer(bool active) : Module(active)
@@ -50,7 +50,6 @@ bool ModulePlayer::Start()
 	verticalSpeed = INITIAL_SPEED;
 
 	jumping = false;
-	ramp_jumping = false;
 
 	SDL_Rect collRec;
 	collRec.x = 1;
@@ -78,11 +77,13 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	float hSpeed = 1.5;
-	float vSpeed = 2.0;
+	LOG("position.y: ");
+	LOG("%d", position.y);
+	float hSpeed = 2.0;
+	float vSpeed = 3.5;
 	int camera = App->renderer->camera.x / 3;
 
-	if (!jumping && !ramp_jumping) {
+	if (!jumping) {
 		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		{
 			if (position.y < 150) yF += vSpeed;
@@ -132,8 +133,7 @@ update_status ModulePlayer::Update()
 	collider->SetPos(position.x, position.y); //update collider position
 
 	// Draw everything --------------------------------------
-	if(destroyed == false)
-		App->renderer->Blit(graphics, position.x, (position.y + height), &(current_animation->GetCurrentFrame()));
+	App->renderer->Blit(graphics, position.x, (position.y + height), &(current_animation->GetCurrentFrame()));
 
 	App->renderer->Blit(foreground, 0, 28, NULL);
 	//App->renderer->Blit(foreground2, 11248, 28, NULL);
@@ -148,16 +148,32 @@ update_status ModulePlayer::Update()
 
 void ModulePlayer::onNotify(GameEvent event) {
 	if (event == CRASH) {
-		destroyed = true;
-		App->particles->AddParticle(App->particles->explosion, position.x+5, position.y); //create explosion
-		App->particles->AddParticle(App->particles->explosion, position.x, position.y); //create explosion
-		App->particles->AddParticle(App->particles->explosion, position.x-5, position.y); //create explosion
-		destroyed = true;
+		//App->particles->AddParticle(App->particles->explosion, position.x+5, position.y); //create explosion
 		CleanUp();
-		App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 3.0f);
+		App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
 	}
 	else if (event == RAMP_JUMP) {
-		verticalSpeed = -JUMP_SPEED*1.5f;
-		jumping = true;
+		if (!jumping && position.y < 140 && position.y > 120) {
+			verticalSpeed = -JUMP_SPEED*1.5f;
+			jumping = true;
+		}
+	}
+	else if (event == CHECK_LOW) {
+		if (!jumping || height < 15) {
+			CleanUp();
+			App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
+		}
+	}
+	else if (event == CHECK_HIGH) {
+		if (height > 25) {
+			CleanUp();
+			App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
+		}
+	}
+	else if (event == CHECK_PIT) {
+		if (!jumping) {
+			CleanUp();
+			App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
+		}
 	}
 }

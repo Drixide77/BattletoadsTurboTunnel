@@ -43,9 +43,9 @@ bool ModuleParticles::Start()
 	collRec.h = 16;
 	collRec.w = 16;
 	laser.collider = App->collision->AddCollider(collRec);
-	laser.collider->colliderType = PLAYER_LASER;
+	laser.collider->colliderType = PLAYER;
 	laser.optionalCollider = App->collision->AddCollider(collRec);
-	laser.optionalCollider->colliderType = PLAYER_LASER;
+	laser.optionalCollider->colliderType = PLAYER;
 
 	// TODO 12: Create a new "Explosion" particle 
 	// audio: rtype/explosion.wav
@@ -183,7 +183,7 @@ bool Particle::Update()
 }
 
 void Particle::onNotify(GameEvent event) {
-	if (event == DESTROY_PARTICLE) {
+	if (event == CRASH) {
 		ttl = 0;
 		App->particles->AddParticle(App->particles->explosion,posX, posY); //create explosion
 	}
