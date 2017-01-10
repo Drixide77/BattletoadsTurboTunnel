@@ -83,6 +83,7 @@ public:
 private:
 	std::list<Collider*> colliders;
 	bool debug = false;
+	bool godmode = false;
 };
 
 #endif // __ModuleCollision_H__

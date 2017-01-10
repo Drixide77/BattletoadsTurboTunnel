@@ -38,20 +38,29 @@ update_status ModuleCollision::Update()
 	// After making it work, review that you are doing the minumum checks possible 
 	int indexA = 0;
 	int indexB = 0;
-	for (list<Collider*>::iterator a = colliders.begin(); a != colliders.end(); ++a)
-	{
-		for (list<Collider*>::iterator b = colliders.begin(); b != colliders.end();++b)
+	if (!godmode) {
+		for (list<Collider*>::iterator a = colliders.begin(); a != colliders.end(); ++a)
 		{
-			if (indexA != indexB && (*b)->CheckCollision((*a)->rect)) { // if collide what we do ?
-				(*a)->ValidCollision((*b));
+			for (list<Collider*>::iterator b = colliders.begin(); b != colliders.end(); ++b)
+			{
+				if (indexA != indexB && (*b)->CheckCollision((*a)->rect)) { // if collide what we do ?
+					(*a)->ValidCollision((*b));
+				}
+				++indexB;
 			}
-			++indexB;
+			++indexA;
 		}
-		++indexA;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+		godmode = !godmode;
+		if (godmode) LOG("GODMODE ON!")
+		else LOG("GODMODE OFF")
+	}
 
 	if(debug == true)
 		DebugDraw();

@@ -50,6 +50,7 @@ bool ModulePlayer::Start()
 	verticalSpeed = INITIAL_SPEED;
 
 	jumping = false;
+	ramp_jumping = false;
 
 	SDL_Rect collRec;
 	collRec.x = 1;
@@ -77,8 +78,6 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	LOG("position.y: ");
-	LOG("%d", position.y);
 	float hSpeed = 2.0;
 	float vSpeed = 3.5;
 	int camera = App->renderer->camera.x / 3;
@@ -106,12 +105,20 @@ update_status ModulePlayer::Update()
 		verticalOffset += verticalSpeed;
 	}
 	else {
-		verticalSpeed += GRAVITY;
+		if (ramp_jumping) {
+			if (position.x < 2400 + 11248) {
+				verticalSpeed += GRAVITY*0.5f;
+			} else if (position.x < 2400 + 11248) {
+				verticalSpeed += GRAVITY*0.5f;
+			}
+		}
+		else verticalSpeed += GRAVITY;
 		verticalOffset += verticalSpeed;
 		if (verticalOffset > 4.0f) {
 			verticalOffset = 4.0f;
 			verticalSpeed = -INITIAL_SPEED;
 			jumping = false;
+			ramp_jumping = false;
 		}
 	}
 
@@ -154,12 +161,17 @@ void ModulePlayer::onNotify(GameEvent event) {
 	}
 	else if (event == RAMP_JUMP) {
 		if (!jumping && position.y < 140 && position.y > 120) {
-			verticalSpeed = -JUMP_SPEED*1.5f;
+			if (position.x < 1700 + 11248) {
+				verticalSpeed = -JUMP_SPEED*1.2f;
+			} else if (position.x < 1700 + 11248) {
+				verticalSpeed = -JUMP_SPEED*1.2f;
+			}
 			jumping = true;
+			ramp_jumping = true;
 		}
 	}
 	else if (event == CHECK_LOW) {
-		if (!jumping || height < 15) {
+		if (!jumping || height > 0) {
 			CleanUp();
 			App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
 		}
