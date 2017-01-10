@@ -22,19 +22,20 @@ public:
 public:
 
 	SDL_Texture* graphics = nullptr;
+	SDL_Texture* foreground = nullptr;
+	SDL_Texture* foreground2 = nullptr;
 	Animation* current_animation = nullptr;
 	Animation idle;
+	Animation jump;
+	Animation falling;
 	iPoint position;
-
-	//use floats casted to int for parabolic jumping and hovering
-	int hoverHeight;
-	int hoverSpeed;
-	int hoverCounter;
+	float xF, yF;
+	int height;
+	float verticalOffset;
+	float verticalSpeed;
 
 	bool jumping;
 	bool ramp_jumping;
-	int verticalSpeed;
-	int verticalCounter;
 
 	bool destroyed = false;
 

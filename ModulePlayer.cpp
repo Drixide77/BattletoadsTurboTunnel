@@ -9,8 +9,9 @@
 #include "ModulePlayer.h"
 #include "ModuleAudio.h"
 
-#define VERTICAL_COUNTER 4
-#define HOVER_COUNTER 3
+#define GRAVITY 0.2f
+#define JUMP_SPEED 5.0f
+#define INITIAL_SPEED -1.0f
 
 ModulePlayer::ModulePlayer(bool active) : Module(active)
 {
@@ -35,19 +36,21 @@ bool ModulePlayer::Start()
 	LOG("Loading player");
 
 	graphics = App->textures->Load("battletoads/player.png");
+	foreground = App->textures->Load("battletoads/foreground.png");
+	//foreground2 = App->textures->Load("battletoads/foreground2.png");
 
 	destroyed = false;
 	position.x = 30;
+	xF = 30.0f;
 	position.y = 130;
+	yF = 130.0f;
 
-	hoverHeight = 0;
-	hoverSpeed = 1;
-	hoverCounter = 0;
+	height = 4;
+	verticalOffset = 4.0f;
+	verticalSpeed = INITIAL_SPEED;
 
 	jumping = false;
 	ramp_jumping = false;
-	verticalSpeed = 0;
-	verticalCounter = 0;
 
 	SDL_Rect collRec;
 	collRec.x = 1;
@@ -75,59 +78,65 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	int speed = 1;
+	float hSpeed = 1.5;
+	float vSpeed = 2.0;
 	int camera = App->renderer->camera.x / 3;
 
 	if (!jumping && !ramp_jumping) {
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		{
-			if (position.x + camera > 5) position.x -= speed;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		{
-			if (position.x + camera < 200) position.x += speed;
-		}
-
 		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		{
-			if (position.y < 150) position.y += speed * 2;
+			if (position.y < 150) yF += vSpeed;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		{
-			if (position.y > 110) position.y -= speed * 2;
+			if (position.y > 110) yF -= vSpeed;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
-			verticalSpeed = -4;
+			verticalSpeed = -JUMP_SPEED;
 			jumping = true;
 		}
+
+		if (verticalOffset < 4.0f) verticalSpeed += GRAVITY;
+		else verticalSpeed -= GRAVITY;
+
+		verticalOffset += verticalSpeed;
 	}
 	else {
-		position.y += verticalSpeed;
-		verticalSpeed += 1;
+		verticalSpeed += GRAVITY;
+		verticalOffset += verticalSpeed;
+		if (verticalOffset > 4.0f) {
+			verticalOffset = 4.0f;
+			verticalSpeed = -INITIAL_SPEED;
+			jumping = false;
+		}
 	}
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	{
+		if (position.x + camera > 5) xF -= hSpeed;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	{
+		if (position.x + camera < 200) xF += hSpeed;
+	}
+
+	height = (int)verticalOffset;
+
+	position.x = (int)xF;
+	position.y = (int)yF;
 
 	collider->SetPos(position.x, position.y); //update collider position
 
-	if (hoverCounter >= 2) {
-		hoverHeight += hoverSpeed;
-		hoverCounter = 0;
-	}
-	else hoverCounter++;
-	if (hoverSpeed > 0 && hoverHeight >= 8) {
-		hoverSpeed = -1;
-	}
-	if (hoverSpeed < 0 && hoverHeight <= 0) {
-		hoverSpeed = 1;
-	}
-
 	// Draw everything --------------------------------------
 	if(destroyed == false)
-		App->renderer->Blit(graphics, position.x, (position.y + hoverHeight), &(current_animation->GetCurrentFrame()));
+		App->renderer->Blit(graphics, position.x, (position.y + height), &(current_animation->GetCurrentFrame()));
 
+	App->renderer->Blit(foreground, 0, 28, NULL);
+	//App->renderer->Blit(foreground2, 11248, 28, NULL);
 	return UPDATE_CONTINUE;
 }
 
@@ -138,7 +147,7 @@ update_status ModulePlayer::Update()
 // You will need to create, update and destroy the collider with the player
 
 void ModulePlayer::onNotify(GameEvent event) {
-	if (event == DESTROY_PARTICLE) {
+	if (event == CRASH) {
 		destroyed = true;
 		App->particles->AddParticle(App->particles->explosion, position.x+5, position.y); //create explosion
 		App->particles->AddParticle(App->particles->explosion, position.x, position.y); //create explosion
@@ -146,5 +155,9 @@ void ModulePlayer::onNotify(GameEvent event) {
 		destroyed = true;
 		CleanUp();
 		App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 3.0f);
+	}
+	else if (event == RAMP_JUMP) {
+		verticalSpeed = -JUMP_SPEED*1.5f;
+		jumping = true;
 	}
 }

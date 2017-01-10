@@ -21,6 +21,7 @@ bool ModuleSceneSpace::Start()
 	speed_timer = 0;
 
 	background = App->textures->Load("battletoads/level1.png");
+	background2 = App->textures->Load("battletoads/level2.png");
 
 	App->player->Enable();
 	App->particles->Enable();
@@ -73,10 +74,12 @@ update_status ModuleSceneSpace::Update()
 	int scroll_speed = base_speed;
 
 	App->player->position.x += base_speed;
+	App->player->xF += (float)base_speed;
 	App->renderer->camera.x -= base_speed*3;
 	
 	// Draw everything --------------------------------------
 	App->renderer->Blit(background, 0, 28, NULL);
+	App->renderer->Blit(background2, 11248, 28, NULL);
 	
 	return UPDATE_CONTINUE;
 }

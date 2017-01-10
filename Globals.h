@@ -19,7 +19,7 @@ enum update_status
 };
 
 
-enum GameEvent { DESTROY_PARTICLE };
+enum GameEvent { CRASH, RAMP_JUMP };
 
 
 // Useful typedefs ---------
