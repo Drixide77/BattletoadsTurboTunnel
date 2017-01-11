@@ -12,6 +12,8 @@ Get ready for the most infamous level of the classic NES beat 'em up Battletoads
 
 WASD or Direction Arrows to move.
 Spacebar to jump and to confirm.
+F1 to show/hide the hitboxes.
+F2 to toggle godmode (ignore collisions).
 
 # Get the game
 
