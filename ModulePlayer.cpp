@@ -118,9 +118,18 @@ update_status ModulePlayer::Update()
 				if (position.x < 2400 + 11248) {
 					verticalSpeed += GRAVITY*0.5f;
 				}
-				else if (position.x < 2400 + 11248) {
-					verticalSpeed += GRAVITY*0.5f;
+				else if (position.x < 3900 + 11248) {
+					verticalSpeed += GRAVITY*0.35f;
 				}
+        else if (position.x < 5400 + 11248) {
+          verticalSpeed += GRAVITY*0.35f;
+        }
+        else if (position.x < 7500 + 11248) {
+          verticalSpeed += GRAVITY*0.20f;
+        }
+        else {
+          verticalSpeed += GRAVITY*0.15f;
+        }
 			}
 			else verticalSpeed += GRAVITY;
 			if (verticalSpeed > -0.5f) current_animation = &falling;
@@ -182,11 +191,17 @@ void ModulePlayer::onNotify(GameEvent event) {
 	}
 	else if (event == RAMP_JUMP && !destroyed) {
 		if (!jumping && position.y < 140 && position.y > 120) {
-			if (position.x < 1700 + 11248) {
+			if (position.x < 1700 + 11248) { //ramp 1
 				verticalSpeed = -JUMP_SPEED*1.2f;
-			} else if (position.x < 1700 + 11248) {
-				verticalSpeed = -JUMP_SPEED*1.2f;
-			}
+			} else if (position.x < 3000 + 11248) { // ramp 2
+				verticalSpeed = -JUMP_SPEED*1.1f;
+			} else if (position.x < 4800 + 11248) { // ramp 3
+        verticalSpeed = -JUMP_SPEED*1.1f;
+      } else if (position.x < 6300 + 11248) { // ramp 4
+        verticalSpeed = -JUMP_SPEED*0.9f;
+      } else if (position.x < 9400 + 11248) { // ramp 5
+        verticalSpeed = -JUMP_SPEED*0.9f;
+      }
 			jumping = true;
 			ramp_jumping = true;
 			current_animation = &jump;
