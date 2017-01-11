@@ -31,6 +31,8 @@ public:
 	Animation falling;
 	Animation dead;
 
+  uint deathfx = 0;
+
 	iPoint position;
 	float xF, yF;
 	int height;

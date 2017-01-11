@@ -36,6 +36,9 @@ bool ModulePlayer::Start()
 	foreground = App->textures->Load("battletoads/foreground.png");
 	//foreground2 = App->textures->Load("battletoads/foreground2.png");
 
+  if (deathfx == 0)
+    deathfx = App->audio->LoadFx("battletoads/explosion.wav");
+
 	destroyed = false;
 	position.x = 30;
 	xF = 30.0f;
@@ -178,6 +181,7 @@ void ModulePlayer::onNotify(GameEvent event) {
 		destroyed = true;
 		current_animation = &dead;
     verticalSpeed = -JUMP_SPEED;
+    App->audio->PlayFx(deathfx);
 	}
 	else if (event == RAMP_JUMP) {
 		if (!jumping && position.y < 140 && position.y > 120) {
@@ -196,6 +200,7 @@ void ModulePlayer::onNotify(GameEvent event) {
 			destroyed = true;
 			current_animation = &dead;
       verticalSpeed = -JUMP_SPEED;
+      App->audio->PlayFx(deathfx);
 		}
 	}
 	else if (event == CHECK_HIGH) {
@@ -203,6 +208,7 @@ void ModulePlayer::onNotify(GameEvent event) {
 			destroyed = true;
 			current_animation = &dead;
       verticalSpeed = -JUMP_SPEED;
+      App->audio->PlayFx(deathfx);
 		}
 	}
 	else if (event == CHECK_PIT) {
@@ -210,6 +216,7 @@ void ModulePlayer::onNotify(GameEvent event) {
 			destroyed = true;
 			current_animation = &dead;
       verticalSpeed = -JUMP_SPEED;
+      App->audio->PlayFx(deathfx);
 		}
 	}
 }

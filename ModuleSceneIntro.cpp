@@ -24,7 +24,7 @@ bool ModuleSceneIntro::Start()
 
 	App->audio->PlayMusic("battletoads/title.ogg", 1.0f);
 	if(fx == 0)
-		fx = App->audio->LoadFx("rtype/starting.wav");
+		fx = App->audio->LoadFx("battletoads/starting.wav");
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	
