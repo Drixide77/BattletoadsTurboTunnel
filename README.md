@@ -6,7 +6,7 @@ Get ready for the most infamous level of the classic NES beat 'em up Battletoads
 
 # Demo
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3ruqibBvNyA/0.jpg)](https://www.youtube.com/watch?v=3ruqibBvNyA)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/w5iyG1fqwXk/0.jpg)](https://www.youtube.com/watch?v=w5iyG1fqwXk)
 
 # Controls
 
