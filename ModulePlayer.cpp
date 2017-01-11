@@ -58,6 +58,10 @@ bool ModulePlayer::Start()
 	collider->colliderType = PLAYER;
 	collider->addObserver(this);
 
+  destroyed = false;
+  death_counter = 2.0f;
+  isdead = false;
+
 	current_animation = &idle;
 	return true;
 }
@@ -136,9 +140,16 @@ update_status ModulePlayer::Update()
 
 	}
 	else {
-		//Death animation and clean at the end
-		//CleanUp();
-		//App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 2.0f);
+    if (death_counter > 0.0f) {
+      verticalSpeed += GRAVITY;
+      verticalOffset += verticalSpeed;
+      death_counter -= 0.01666f;
+    }
+    else if (!isdead) {
+      isdead = true;
+      CleanUp();
+      App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 1.0f);
+    }
 	}
 
 	height = (int)verticalOffset;
@@ -149,7 +160,7 @@ update_status ModulePlayer::Update()
 	collider->SetPos(position.x, position.y); //update collider position
 
 	// Draw everything --------------------------------------
-	App->renderer->Blit(graphics, position.x, (position.y + height), &(current_animation->GetCurrentFrame()));
+  if (death_counter > 0.0f) App->renderer->Blit(graphics, position.x, (position.y + height), &(current_animation->GetCurrentFrame()));
 
 	App->renderer->Blit(foreground, 0, 28, NULL);
 	//App->renderer->Blit(foreground2, 11248, 28, NULL);
@@ -166,6 +177,7 @@ void ModulePlayer::onNotify(GameEvent event) {
 	if (event == CRASH) {
 		destroyed = true;
 		current_animation = &dead;
+    verticalSpeed = -JUMP_SPEED;
 	}
 	else if (event == RAMP_JUMP) {
 		if (!jumping && position.y < 140 && position.y > 120) {
@@ -183,18 +195,21 @@ void ModulePlayer::onNotify(GameEvent event) {
 		if (!jumping || height > 0) {
 			destroyed = true;
 			current_animation = &dead;
+      verticalSpeed = -JUMP_SPEED;
 		}
 	}
 	else if (event == CHECK_HIGH) {
 		if (height > 25) {
 			destroyed = true;
 			current_animation = &dead;
+      verticalSpeed = -JUMP_SPEED;
 		}
 	}
 	else if (event == CHECK_PIT) {
 		if (!jumping) {
 			destroyed = true;
 			current_animation = &dead;
+      verticalSpeed = -JUMP_SPEED;
 		}
 	}
 }

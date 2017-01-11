@@ -24,11 +24,13 @@ public:
 	SDL_Texture* graphics = nullptr;
 	SDL_Texture* foreground = nullptr;
 	SDL_Texture* foreground2 = nullptr;
+
 	Animation* current_animation = nullptr;
 	Animation idle;
 	Animation jump;
 	Animation falling;
 	Animation dead;
+
 	iPoint position;
 	float xF, yF;
 	int height;
@@ -38,7 +40,9 @@ public:
 	bool jumping;
 	bool ramp_jumping;
 
-	bool destroyed = false;
+	bool destroyed;
+  float death_counter;
+  bool isdead;
 
 	Collider *collider;
 };
