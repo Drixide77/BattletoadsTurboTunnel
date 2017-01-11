@@ -141,5 +141,5 @@ void ModuleSceneSpace::initCol() {
 	rp1->colliderType = RAMP;
 
 	Collider * pit1 = App->collision->AddCollider({ 1730 + offset, 120, 295, 80 });
-	pit1->colliderType = RAMP;
+	pit1->colliderType = PIT;
 }

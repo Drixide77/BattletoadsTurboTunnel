@@ -34,7 +34,7 @@ bool ModulePlayer::Start()
 
 	graphics = App->textures->Load("battletoads/player.png");
 	foreground = App->textures->Load("battletoads/foreground.png");
-	//foreground2 = App->textures->Load("battletoads/foreground2.png");
+	foreground2 = App->textures->Load("battletoads/foreground2.png");
 
   if (deathfx == 0)
     deathfx = App->audio->LoadFx("battletoads/explosion.wav");
@@ -166,7 +166,7 @@ update_status ModulePlayer::Update()
   if (death_counter > 0.0f) App->renderer->Blit(graphics, position.x, (position.y + height), &(current_animation->GetCurrentFrame()));
 
 	App->renderer->Blit(foreground, 0, 28, NULL);
-	//App->renderer->Blit(foreground2, 11248, 28, NULL);
+	App->renderer->Blit(foreground2, 11248, 28, NULL);
 	return UPDATE_CONTINUE;
 }
 
