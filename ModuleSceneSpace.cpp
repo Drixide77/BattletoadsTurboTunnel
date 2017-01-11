@@ -22,6 +22,7 @@ bool ModuleSceneSpace::Start()
 
 	background = App->textures->Load("battletoads/level1.png");
 	background2 = App->textures->Load("battletoads/level2.png");
+  gui = App->textures->Load("battletoads/gui.png");
 
 	App->player->Enable();
 	App->particles->Enable();
@@ -71,6 +72,7 @@ update_status ModuleSceneSpace::Update()
 	// Draw everything --------------------------------------
 	App->renderer->Blit(background, 0, 28, NULL);
 	App->renderer->Blit(background2, 11248, 28, NULL);
+  App->renderer->Blit(gui, -App->renderer->camera.x/3, 0, NULL);
 	
 	return UPDATE_CONTINUE;
 }

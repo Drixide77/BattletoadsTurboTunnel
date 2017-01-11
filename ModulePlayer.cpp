@@ -152,7 +152,6 @@ update_status ModulePlayer::Update()
 		{
 			if (position.x + camera < 200) xF += hSpeed;
 		}
-
 	}
 	else {
     if (death_counter > 0.0f) {
