@@ -7,7 +7,6 @@
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneIntro.h"
 
-// Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 
 ModuleSceneIntro::ModuleSceneIntro(bool active) : Module(active)
 {}

@@ -22,7 +22,6 @@ class Particle:public Observer
 {	
 public:
 	//bool to_delete = false;
-	// TODO 1: Fill in the structure with all the properties you need for each particle
 	int posX, posY;
 	int speed;
 	ParticleType Type;
@@ -31,7 +30,6 @@ public:
 	Animation sprite;
 	int frame;
 	Collider* collider;
-	// TODO 11: Add an optional collider to each particle
 	Collider* optionalCollider;
 	Particle();
 	Particle(const Particle& p);

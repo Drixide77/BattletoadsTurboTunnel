@@ -34,8 +34,6 @@ update_status ModuleCollision::PreUpdate()
 
 update_status ModuleCollision::Update()
 {
-	// TODO 8: Check collisions between all colliders. 
-	// After making it work, review that you are doing the minumum checks possible 
 	int indexA = 0;
 	int indexB = 0;
 	if (!godmode) {
@@ -100,8 +98,6 @@ Collider* ModuleCollision::AddCollider(const SDL_Rect& rect)
 
 bool Collider::CheckCollision(const SDL_Rect& r) const
 {
-	// TODO 7: Create by hand (avoid consulting the internet) a simple collision test
-	// Return true if the argument and the own rectangle are intersecting
 	int leftA, leftB;
 	int rightA, rightB;
 	int topA, topB;
@@ -153,12 +149,6 @@ void Collider::ValidCollision(Collider * collider) {
 		} else if (collider->colliderType == PIT) {
 			observers_[0]->onNotify(CHECK_PIT);
 		}
-
-		/*if(colliderType!=WALL)
-			to_delete = true;
-		for (int i = 0; i < numObservers_; i++) {
-			observers_[0]->onNotify(DESTROY_PARTICLE);
-		}*/
 	}
 }
 

@@ -15,7 +15,7 @@
 
 ModulePlayer::ModulePlayer(bool active) : Module(active)
 {
-	idle.frames.push_back({16, 442, 37, 30}); //16, 442, 53, 472
+	idle.frames.push_back({16, 442, 37, 30});
 
 	jump.frames.push_back({63, 440, 37, 30});
 
@@ -169,12 +169,6 @@ update_status ModulePlayer::Update()
 	App->renderer->Blit(foreground2, 11248, 28, NULL);
 	return UPDATE_CONTINUE;
 }
-
-// TODO 13: Make so is the laser collides, it is removed and create an explosion particle at its position
-
-// TODO 14: Make so if the player collides, it is removed and create few explosions at its positions
-// then fade away back to the first screen (use the "destroyed" bool already created 
-// You will need to create, update and destroy the collider with the player
 
 void ModulePlayer::onNotify(GameEvent event) {
 	if (event == CRASH && !destroyed) {

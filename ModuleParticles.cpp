@@ -22,9 +22,6 @@ bool ModuleParticles::Start()
 	graphics = App->textures->Load("battletoads/player.png");
 
 
-	// TODO 2: Create a prototype for the laser particle
-	// audio: rtype/laser.wav
-	// coords: {232, 103, 16, 12}; {249, 103, 16, 12};
 	laser =  Particle();
 	laser.sprite.frames.push_back({ 232, 103, 16, 12 });
 	laser.sprite.frames.push_back({ 249, 103, 16, 12 });
@@ -47,9 +44,6 @@ bool ModuleParticles::Start()
 	laser.optionalCollider = App->collision->AddCollider(collRec);
 	laser.optionalCollider->colliderType = PLAYER;
 
-	// TODO 12: Create a new "Explosion" particle 
-	// audio: rtype/explosion.wav
-	// coords: {274, 296, 33, 30}; {313, 296, 33, 30}; {346, 296, 33, 30}; {382, 296, 33, 30}; {419, 296, 33, 30}; {457, 296, 33, 30};
 	explosion = Particle();
 	explosion.ttl = 1;
 	explosion.speed = 1;
@@ -107,7 +101,6 @@ update_status ModuleParticles::Update()
 
 void ModuleParticles::AddParticle(const Particle& particle, int x, int y)
 {
-	// TODO 4: Fill in a method to create an instance of a prototype particle	
 	Particle * newParticle = new Particle(particle);
 	newParticle->posX = x;
 	newParticle->posY = y;
@@ -123,7 +116,6 @@ Particle::Particle()
 	
 }
 
-// TODO 3: Fill in a copy constructor
 Particle::Particle(const Particle& p) 
 {
 	posX = p.posX;
@@ -163,8 +155,7 @@ bool Particle::Update()
 		collider->SetPos(posX, posY);
 		posX += speed;
 	}
-	// TODO 5: This is the core of the particle functionality.
-	// Return false if the particle must be destroyed
+
 	if (frame <= 30) {
 		++frame;
 	}

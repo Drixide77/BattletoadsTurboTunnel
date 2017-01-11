@@ -4,9 +4,7 @@
 #include<list>
 #include "Module.h"
 #include "Observer.h"
-// TODO 9: Create a matrix of game specific types of collision for early discard
-// Example: lasers should not collide with lasers but should collider with walls
-// enemy shots will collide with other enemies ? and against walls ?
+
 
 enum ColliderType {
 	PLAYER,
@@ -32,7 +30,6 @@ public:
 	SDL_Rect rect = { 0,0,0,0 };
 	bool to_delete = false;
 	ColliderType colliderType;
-	// TODO 10: Add a way to notify other classes that a collision happened
 	
 	void ValidCollision(Collider * collider);
 	void addObserver(Observer* observer);
