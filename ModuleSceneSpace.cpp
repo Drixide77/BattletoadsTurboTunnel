@@ -137,9 +137,78 @@ void ModuleSceneSpace::initCol() {
 	//Second Part
 	int offset = 11248;
 
-	Collider * rp1 = App->collision->AddCollider({ 1648+offset, 120, 10, 80 });
+	Collider * rp1 = App->collision->AddCollider({ 1648 + offset, 120, 10, 80 });
 	rp1->colliderType = RAMP;
 
 	Collider * pit1 = App->collision->AddCollider({ 1730 + offset, 120, 295, 80 });
 	pit1->colliderType = PIT;
+
+  Collider * lw5 = App->collision->AddCollider({ 2445 + offset, 120, 10, 80 });
+  lw5->colliderType = LOW_WALL;
+
+  Collider * rp2 = App->collision->AddCollider({ 2925 + offset, 120, 10, 80 });
+  rp2->colliderType = RAMP;
+
+  Collider * pit2 = App->collision->AddCollider({ 3005 + offset, 120, 585, 80 });
+  pit2->colliderType = PIT;
+
+  Collider * lw6 = App->collision->AddCollider({ 3980 + offset, 120, 10, 80 });
+  lw6->colliderType = LOW_WALL;
+
+  Collider * lw7 = App->collision->AddCollider({ 4300 + offset, 120, 10, 80 });
+  lw7->colliderType = LOW_WALL;
+
+  Collider * rp3 = App->collision->AddCollider({ 4719 + offset, 120, 10, 80 });
+  rp3->colliderType = RAMP;
+
+  Collider * pit3 = App->collision->AddCollider({ 4805 + offset, 120, 560, 80 });
+  pit3->colliderType = PIT;
+
+  Collider * tw9 = App->collision->AddCollider({ 5520 + offset, 120, 10, 80 });
+  tw9->colliderType = TOP_WALL;
+
+  Collider * bw7 = App->collision->AddCollider({ 5776 + offset, 120, 10, 80 });
+  bw7->colliderType = BOT_WALL;
+
+  Collider * tw10 = App->collision->AddCollider({ 6032 + offset, 120, 10, 80 });
+  tw10->colliderType = TOP_WALL;
+
+  Collider * rp4 = App->collision->AddCollider({ 6254 + offset, 120, 10, 80 });
+  rp4->colliderType = RAMP;
+
+  Collider * pit4 = App->collision->AddCollider({ 6338 + offset, 120, 1077, 80 });
+  pit4->colliderType = PIT;
+
+  Collider * tw11 = App->collision->AddCollider({ 7696 + offset, 120, 10, 80 });
+  tw11->colliderType = TOP_WALL;
+
+  Collider * bw8 = App->collision->AddCollider({ 7952 + offset, 120, 10, 80 });
+  bw8->colliderType = BOT_WALL;
+
+  Collider * tw12 = App->collision->AddCollider({ 8208 + offset, 120, 10, 80 });
+  tw12->colliderType = TOP_WALL;
+
+  Collider * bw9 = App->collision->AddCollider({ 8464 + offset, 120, 10, 80 });
+  bw9->colliderType = BOT_WALL;
+
+  Collider * tw13 = App->collision->AddCollider({ 8720 + offset, 120, 10, 80 });
+  tw13->colliderType = TOP_WALL;
+
+  Collider * bw10 = App->collision->AddCollider({ 8976 + offset, 120, 10, 80 });
+  bw10->colliderType = BOT_WALL;
+
+  Collider * rp5 = App->collision->AddCollider({ 9327 + offset, 120, 10, 80 });
+  rp5->colliderType = RAMP;
+
+  Collider * pit5 = App->collision->AddCollider({ 9412 + offset, 120, 1330, 80 });
+  pit5->colliderType = PIT;
+
+  Collider * lw8 = App->collision->AddCollider({ 11148 + offset, 120, 10, 80 });
+  lw8->colliderType = LOW_WALL;
+
+  Collider * lw9 = App->collision->AddCollider({ 11596 + offset, 120, 10, 80 });
+  lw9->colliderType = LOW_WALL;
+
+  Collider * goal = App->collision->AddCollider({ 12012 + offset, 120, 10, 80 });
+  goal->colliderType = GOAL;
 }
