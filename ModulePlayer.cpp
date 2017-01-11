@@ -177,13 +177,13 @@ update_status ModulePlayer::Update()
 // You will need to create, update and destroy the collider with the player
 
 void ModulePlayer::onNotify(GameEvent event) {
-	if (event == CRASH) {
+	if (event == CRASH && !destroyed) {
 		destroyed = true;
 		current_animation = &dead;
     verticalSpeed = -JUMP_SPEED;
     App->audio->PlayFx(deathfx);
 	}
-	else if (event == RAMP_JUMP) {
+	else if (event == RAMP_JUMP && !destroyed) {
 		if (!jumping && position.y < 140 && position.y > 120) {
 			if (position.x < 1700 + 11248) {
 				verticalSpeed = -JUMP_SPEED*1.2f;
@@ -195,7 +195,7 @@ void ModulePlayer::onNotify(GameEvent event) {
 			current_animation = &jump;
 		}
 	}
-	else if (event == CHECK_LOW) {
+	else if (event == CHECK_LOW && !destroyed) {
 		if (!jumping || height > 0) {
 			destroyed = true;
 			current_animation = &dead;
@@ -203,15 +203,12 @@ void ModulePlayer::onNotify(GameEvent event) {
       App->audio->PlayFx(deathfx);
 		}
 	}
-	else if (event == CHECK_HIGH) {
-		if (height > 25) {
-			destroyed = true;
-			current_animation = &dead;
-      verticalSpeed = -JUMP_SPEED;
-      App->audio->PlayFx(deathfx);
-		}
+	else if (event == CROSS_GOAL && !destroyed) {
+		//Do victory
+    CleanUp();
+    App->fade->FadeToBlack((Module *)App->scene_intro, (Module *)App->scene_space, 0.5f);
 	}
-	else if (event == CHECK_PIT) {
+	else if (event == CHECK_PIT && !destroyed) {
 		if (!jumping) {
 			destroyed = true;
 			current_animation = &dead;

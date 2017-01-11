@@ -146,8 +146,8 @@ void Collider::ValidCollision(Collider * collider) {
 			if (rect.y > 128) observers_[0]->onNotify(CRASH);
 		} else if (collider->colliderType == LOW_WALL) {
 			observers_[0]->onNotify(CHECK_LOW);
-		} else if (collider->colliderType == HI_WALL) {
-			observers_[0]->onNotify(CHECK_HIGH);
+		} else if (collider->colliderType == GOAL) {
+			observers_[0]->onNotify(CROSS_GOAL);
 		} else if (collider->colliderType == RAMP) {
 			observers_[0]->onNotify(RAMP_JUMP);
 		} else if (collider->colliderType == PIT) {

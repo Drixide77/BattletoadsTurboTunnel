@@ -13,7 +13,7 @@ enum ColliderType {
 	TOP_WALL,
 	BOT_WALL,
 	LOW_WALL,
-	HI_WALL,
+	GOAL,
 	RAMP,
 	PIT
 };
