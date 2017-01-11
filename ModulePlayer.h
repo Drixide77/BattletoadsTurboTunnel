@@ -32,6 +32,7 @@ public:
 	Animation dead;
 
   uint deathfx = 0;
+  uint jumpfx = 0;
 
 	iPoint position;
 	float xF, yF;

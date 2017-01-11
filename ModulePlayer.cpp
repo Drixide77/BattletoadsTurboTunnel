@@ -39,6 +39,9 @@ bool ModulePlayer::Start()
   if (deathfx == 0)
     deathfx = App->audio->LoadFx("battletoads/explosion.wav");
 
+  if (jumpfx == 0)
+    jumpfx = App->audio->LoadFx("battletoads/jump.ogg");
+
 	destroyed = false;
 	position.x = 30;
 	xF = 30.0f;
@@ -187,6 +190,7 @@ void ModulePlayer::onNotify(GameEvent event) {
 			jumping = true;
 			ramp_jumping = true;
 			current_animation = &jump;
+      App->audio->PlayFx(jumpfx);
 		}
 	}
 	else if (event == CHECK_LOW && !destroyed) {
