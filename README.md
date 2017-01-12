@@ -4,6 +4,8 @@
 
 Get ready for the most infamous level of the classic NES beat 'em up Battletoads. The 3rd level known as Turbo Tunnel, where you dash through obsticle on a hoverbike at ludicrous speed. Are you up for the challenge? You only get one live!
 
+More info at: https://drixide77.github.io/BattletoadsTurboTunnel/
+
 # Demo
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/w5iyG1fqwXk/0.jpg)](https://www.youtube.com/watch?v=w5iyG1fqwXk)
